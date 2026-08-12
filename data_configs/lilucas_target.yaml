@@ -1,0 +1,38 @@
+name: lilucas_target
+n_samples: 10000
+seed: 0
+k_folds: 5
+fold_seed: 42
+scm:
+  var_names: [Smoking, Genetics, Allergy, LungCancer, Coughing, Fatigue]
+  edges:
+    - [Smoking, LungCancer, 0.9]
+    - [Genetics, LungCancer, 0.8]
+    - [Allergy, Coughing, 0.4]
+    - [LungCancer, Coughing, 0.6]
+    - [LungCancer, Fatigue, 0.9]
+    - [Coughing, Fatigue, 0.5]
+  noise_mean: [0.0, 0.0, 0.1, 0.1, 0.3, 0.2]
+  noise_std: [0.5, 2.0, 1.5, 1.0, 0.8, 1.2]
+interventions:
+  - {}
+  - {Smoking: 0}
+  - {Smoking: 1}
+  - {LungCancer: 0}
+  - {LungCancer: 1}
+  - {Smoking: 0, LungCancer: 0}
+  - {Smoking: 1, LungCancer: 1}
+  - {Smoking: 0, LungCancer: 1}
+  - {Smoking: 1, LungCancer: 0}
+  - {Genetics: 0}
+  - {Genetics: 1}
+  - {Genetics: 0, Smoking: 0}
+  - {Genetics: 1, Smoking: 1}
+  - {Genetics: 0, Smoking: 1}
+  - {Genetics: 1, Smoking: 0}
+  - {Allergy: 0}
+  - {Allergy: 1}
+  - {Coughing: 0}
+  - {Coughing: 1, Fatigue: 1}
+  - {Coughing: 1, Fatigue: 0}
+  - {Coughing: 0, Fatigue: 1}

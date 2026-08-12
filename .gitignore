@@ -1,0 +1,59 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.egg-info/
+.eggs/
+dist/
+build/
+*.egg
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+
+# Environment
+.env
+.venv/
+venv/
+env/
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Claude
+.claude/
+
+# Generated data bundles (reproduced via python lan_scm.py data_configs/<name>.yaml)
+data/
+
+# Experiment results (reproduced via bash run_all.sh)
+results/
+results_production/
+eval_results/
+
+# Generated figures (reproduced via python traca_figures/generate_final.py)
+traca_figures/*.pdf
+traca_figures/*.tex
+
+# Serialised artifacts
+*.pkl
+
+# Logs
+*.log
+
+# Archive of removed development files
+_archive/
+figures/
+paper_figures/
+notebooks/
+results_misspec/
+traca_jmlr.tex

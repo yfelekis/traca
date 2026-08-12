@@ -1,0 +1,47 @@
+name: atce_gaussian_z_frobenius_single
+objective: gaussian
+
+# NOT a paper benchmark — retained to document the Frobenius geometry finding.
+# EntrywiseBox is the reported ATCE benchmark.
+#
+# Selection diagram: Z (node 0) and Y (node 2) are shifted.
+# Single query: P(Y | do(X=0)). Under do(X=v), W[1,2] is severed but W[0,2]
+# (Z->Y) survives. FrobeniusBall on column 2 via entry_mask.
+#
+# τ=I baseline (no shifted nodes in constructive class).
+# Same structural finding as frobenius_full.
+
+data:
+  source: data_configs/atce.yaml
+
+ambiguity:
+  mechanism:
+    type: FrobeniusBall
+    shifted_rows: [0, 1]          # rows with entries in column 2 (Y's mechanism)
+    eta: 0.3
+    entry_mask:
+      - [0, 0, 1]                 # W[0,2] (Z->Y)
+      - [0, 0, 1]                 # W[1,2] (X->Y)
+      - [0, 0, 0]
+  environment:
+    type: GelbrichBall
+    shifted_rows: [0, 2]          # Z and Y noise shifts
+    eps: 0.2
+
+constructive_class:
+  type: markovian
+  shifted_nodes: []               # τ=I baseline; see comment above
+
+training:
+  eta_tau: 0.005
+  eta_adv: 0.005
+  k_tau: 5
+  k_adv: 2
+  n_iters: 5000
+  tol: 1.0e-5
+  conv_window: 30
+  seed: 42
+  grad_backend: autograd
+  query_family:
+    - intervention_idx: 1
+      O: [2]                      # do(X=0), observe Y

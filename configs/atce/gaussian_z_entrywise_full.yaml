@@ -1,0 +1,45 @@
+name: atce_gaussian_z_entrywise_full
+objective: gaussian
+
+# Selection diagram: Z (node 0) and Y (node 2) are shifted.
+# Mechanism rule (columns): Y's mechanism = column 2 of W = {W[0,2] (Z->Y), W[1,2] (X->Y)}.
+# Z is a root node (no incoming edges) — environment shift only.
+# EntrywiseBox budget eta=0.3 on each of W[0,2] and W[1,2] independently.
+# shifted_rows=[0,1]: rows that have nonzero B entries in column 2.
+#
+# Full-joint query: adversary allocates budget across both edges and all interventions.
+#
+# NOTE: P(Y|do(X)) transportability is not assumed. This is a certified interval
+# experiment — compare to oracle target data, do not assert classical transport.
+
+data:
+  source: data_configs/atce.yaml
+
+ambiguity:
+  mechanism:
+    type: EntrywiseBox
+    shifted_rows: [0, 1]          # rows with nonzero B entries (column 2 = Y's mechanism)
+    B:
+      - [0.0, 0.0, 0.3]          # B[0,2]=0.3 (Z->Y)
+      - [0.0, 0.0, 0.3]          # B[1,2]=0.3 (X->Y)
+      - [0.0, 0.0, 0.0]
+  environment:
+    type: GelbrichBall
+    shifted_rows: [0, 2]          # Z and Y noise shifts
+    eps: 0.2
+
+constructive_class:
+  type: markovian
+  shifted_nodes: [0, 2]           # Z and Y; tau[0,0] and tau[2,2] free, tau[1,1]=1
+
+training:
+  eta_tau: 0.005
+  eta_adv: 0.005
+  k_tau: 5
+  k_adv: 2
+  n_iters: 5000
+  tol: 1.0e-5
+  conv_window: 30
+  seed: 42
+  grad_backend: autograd
+  query_family: null              # full-joint

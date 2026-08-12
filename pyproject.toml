@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "traca"
+version = "0.1.0"
+requires-python = ">=3.10"
+dependencies = [
+    "numpy>=1.24",
+    "scipy>=1.10",
+    "pyyaml>=6.0",
+    "joblib>=1.3",
+]
+
+[project.optional-dependencies]
+all = ["torch", "matplotlib", "seaborn", "tqdm", "pandas"]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["traca*", "experiments*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"

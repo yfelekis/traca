@@ -1,0 +1,44 @@
+name: ate_misspec_dm0.5
+objective: gaussian
+
+# Misspecification sweep: delta=-0.5 on the X->Y edge.
+# At eta=0.2 the box is [-0.7, -0.3]; true shift is 0.5.
+
+data:
+  source: data_configs/ate.yaml
+
+ambiguity:
+  mechanism:
+    type: EntrywiseBox
+    shifted_rows: [0]
+    B:
+      - [0.0, 0.5]
+      - [0.0, 0.0]
+    delta:
+      - [0.0, -0.5]
+      - [0.0, 0.0]
+  environment:
+    type: GelbrichBall
+    shifted_rows: [1]
+    eps: 0.2
+
+constructive_class:
+  type: from_districts
+  districts: [[0, 1]]
+  shifted_nodes: [1]
+
+training:
+  eta_tau: 0.005
+  eta_adv: 0.005
+  k_tau: 5
+  k_adv: 2
+  n_iters: 5000
+  tol: 1.0e-5
+  conv_window: 30
+  seed: 42
+  grad_backend: autograd
+  query_family:
+    - intervention_idx: 1
+      O: [1]
+    - intervention_idx: 2
+      O: [1]

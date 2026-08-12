@@ -1,0 +1,46 @@
+name: portland_backdoor
+description: "Portland real-world — back-door SCM d=4 [Z,S,X,Y], environment shift (different watershed Z dist)"
+
+data:
+  bundle_path: data/portland/bundle.pkl
+  target_bundle_path: data/portland/bundle_target.pkl
+  # X (canopy, index 2) and Y (dissolved oxygen, index 3) are affected
+  # by the root-node shift in Z (elevation PC1, index 0) and S (season, index 1).
+  # We treat X as the shifted mechanism node (transport X distribution).
+  sel_nodes: [2, 3]
+
+constructive_class:
+  type: markovian
+  shifted_nodes: [0]           # Z only (selection diagram: T->Z)
+
+ambiguity:
+  mechanism:
+    type: FrobeniusBall
+    eta: 0.0                   # Z is a root node — no incoming edges, no mechanism to shift
+    shifted_rows: [0]
+  environment:
+    type: FrobeniusEmpirical
+    eps: 0.2                   # root-node distribution differs substantially
+    shifted_rows: [0]          # Z noise shift only (source paper: T->Z selection edge)
+
+objective: empirical
+
+training:
+  n_samples: 1000              # uses bundle.n directly for pre-built bundles
+  seed: 0
+  eta_tau: 0.001
+  eta_adv: 0.001
+  k_tau: 5
+  k_adv: 2
+  n_iters: 5000
+  tol: 1.0e-5
+  conv_window: 30
+  grad_mode: analytic
+  query_family:
+    - {intervention_idx: 1, O: [3]}   # do(X=45%), Y=dissolved oxygen
+    - {intervention_idx: 2, O: [3]}   # do(X=50%), Y
+    - {intervention_idx: 3, O: [3]}   # do(X=55%), Y
+    - {intervention_idx: 4, O: [3]}   # do(X=60%), Y
+
+evaluation:
+  adversary_samples: 200

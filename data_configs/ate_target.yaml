@@ -1,0 +1,19 @@
+name: ate_target
+n_samples: 5000
+seed: 1
+k_folds: 5
+fold_seed: 42
+scm:
+  var_names: [X, Y]
+  edges:
+    - [X, Y, 1.5]          # beta = 1.5 (target — Y's mechanism shifted)
+  noise_mean: [0.5, 0.3]
+  noise_std:  [1.0, 1.0]
+  noise_corr:
+    - [0, 1, 0.6]          # same latent confounder as source
+  districts: [[0, 1]]
+  sel_nodes: [1]
+interventions:
+  - {}
+  - {X: 0.0}
+  - {X: 1.0}

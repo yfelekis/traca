@@ -1,0 +1,37 @@
+name: lilucas_light_frobenius_full
+objective: empirical
+
+data:
+  source: data_configs/lilucas_light.yaml
+
+ambiguity:
+  mechanism:
+    type: FrobeniusBall
+    shifted_rows: [0, 1]          # rows of Smoking(0) and Genetics(1), parents of LungCancer(3)
+    eta: 0.5
+    entry_mask:                   # restrict to col 3 only (LungCancer mechanism, col 3)
+      - [0, 0, 0, 1, 0, 0]       # W[0,3]: Smoking->LungCancer (shifted)
+      - [0, 0, 0, 1, 0, 0]       # W[1,3]: Genetics->LungCancer (shifted)
+      - [0, 0, 0, 0, 0, 0]       # all others pinned (invariant mechanisms)
+      - [0, 0, 0, 0, 0, 0]
+      - [0, 0, 0, 0, 0, 0]
+      - [0, 0, 0, 0, 0, 0]
+  environment:
+    type: FrobeniusEmpirical
+    shifted_rows: [3]             # LungCancer noise; eps=0.2 (~0.2 noise SDs, noise_std[3]=1.0)
+    eps: 0.2
+
+constructive_class:
+  type: markovian
+  shifted_nodes: [3]              # LungCancer
+
+training:
+  eta_tau: 0.001
+  eta_adv: 0.001
+  k_tau: 5
+  k_adv: 2
+  n_iters: 5000
+  tol: 1.0e-5
+  conv_window: 30
+  seed: 42
+  query_family: null              # full-joint: all interventions x all output coordinates

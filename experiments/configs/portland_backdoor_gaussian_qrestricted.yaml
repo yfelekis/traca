@@ -1,0 +1,45 @@
+name: portland_backdoor_gaussian_qrestricted
+description: "Portland back-door — Gaussian + Q-restricted to Y under 4 canopy interventions"
+
+data:
+  bundle_path: data/portland/bundle.pkl
+  target_bundle_path: data/portland/bundle_target.pkl
+  sel_nodes: [2, 3]
+
+constructive_class:
+  type: markovian
+  shifted_nodes: [0]           # Z only (selection diagram: T->Z)
+
+ambiguity:
+  mechanism:
+    type: FrobeniusBall
+    eta: 0.0                   # Z is a root node — no incoming edges, no mechanism to shift
+    shifted_rows: [0]
+  environment:
+    type: GelbrichBall
+    eps: 1.0                   # base value; overridden by sweep grid at runtime
+    shifted_rows: [0]          # Z noise shift only (source paper: T->Z selection edge)
+
+objective: gaussian
+
+training:
+  n_samples: 1000
+  seed: 0
+  eta_tau: 0.001
+  eta_adv: 0.001
+  k_tau: 5
+  k_adv: 2
+  n_iters: 5000
+  tol: 1.0e-5
+  conv_window: 30
+  grad_mode: analytic
+  covprox_aggregation: norm_weighted
+  grad_backend: autograd
+  query_family:
+    - {intervention_idx: 1, O: [3]}   # do(X=45%), Y=dissolved oxygen
+    - {intervention_idx: 2, O: [3]}   # do(X=50%), Y
+    - {intervention_idx: 3, O: [3]}   # do(X=55%), Y
+    - {intervention_idx: 4, O: [3]}   # do(X=60%), Y
+
+evaluation:
+  adversary_samples: 200

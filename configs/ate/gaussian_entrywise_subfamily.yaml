@@ -1,0 +1,43 @@
+name: ate_gaussian_entrywise_subfamily
+objective: gaussian
+
+# ASSUMPTION (open, being confirmed separately): classical transportability of
+# P(Y|do(X)) under X->Y with hidden X<->Y confounder. This experiment is
+# structured as "certified interval vs. target-data oracle" and is valid
+# regardless of whether classical transport succeeds.
+
+data:
+  source: data_configs/ate.yaml   # noise_corr: [0,1,0.6] -> Cov(U_X,U_Y)=0.6 (semi-Markovian)
+
+ambiguity:
+  mechanism:
+    type: EntrywiseBox
+    shifted_rows: [0]             # row 0 of W_code: contains W[0,1]=beta (X->Y coefficient)
+    B:
+      - [0.0, 0.5]                # B[0,1]=0.5 = actual Delta_beta (source 1.0 -> target 1.5)
+      - [0.0, 0.0]
+  environment:
+    type: GelbrichBall
+    shifted_rows: [1]             # Y noise; eps=0.2 (~0.2 noise SDs on N(0,1))
+    eps: 0.2
+
+constructive_class:
+  type: from_districts
+  districts: [[0, 1]]            # one district covering {X,Y}; tau is a free 2x2 block
+  shifted_nodes: [1]             # Y is the shifted selection node
+
+training:
+  eta_tau: 0.005
+  eta_adv: 0.005
+  k_tau: 5
+  k_adv: 2
+  n_iters: 5000
+  tol: 1.0e-5
+  conv_window: 30
+  seed: 42
+  grad_backend: autograd
+  query_family:
+    - intervention_idx: 1
+      O: [1]                      # do(X=0.0), observe Y
+    - intervention_idx: 2
+      O: [1]                      # do(X=1.0), observe Y

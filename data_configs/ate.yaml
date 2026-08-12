@@ -1,0 +1,19 @@
+name: ate
+n_samples: 5000
+seed: 0
+k_folds: 5
+fold_seed: 42
+scm:
+  var_names: [X, Y]
+  edges:
+    - [X, Y, 1.0]          # beta = 1.0 (source)
+  noise_mean: [0.5, 0.3]
+  noise_std:  [1.0, 1.0]
+  noise_corr:
+    - [0, 1, 0.6]          # Cov(U_X, U_Y): rho = 0.6 (latent confounder X <-> Y)
+  districts: [[0, 1]]      # {X, Y} in the same district (bidirected edge)
+  sel_nodes: [1]           # Y is the selection node (S -> Y)
+interventions:
+  - {}
+  - {X: 0.0}
+  - {X: 1.0}
