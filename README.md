@@ -1,4 +1,4 @@
-# TraCA
+# Generalised Transportability via Causal Abstractions: TraCA
 
 ## Repository structure
 
